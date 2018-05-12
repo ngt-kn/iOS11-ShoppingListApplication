@@ -32,7 +32,13 @@
                             <outlet property="delegate" destination="6mc-O6-W2N" id="Ttf-iL-LcG"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Category" id="1hn-g8-6Xy"/>
+                    <navigationItem key="navigationItem" title="Category" id="1hn-g8-6Xy">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="dHD-yd-QZv">
+                            <connections>
+                                <action selector="editButtonPressed:" destination="6mc-O6-W2N" id="yAd-Jf-1OS"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="M50-69-oBt" kind="show" identifier="goToListVC" id="vhw-9V-bI3"/>
                     </connections>

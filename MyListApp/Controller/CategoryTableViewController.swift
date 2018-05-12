@@ -7,54 +7,37 @@
 //
 
 import UIKit
+import RealmSwift
 
 class CategoryTableViewController: UITableViewController {
+    let realm = try! Realm()
     
-    
+    var categories : Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        load()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        // returns count if != nil, else returns 1
+        return categories?.count ?? 1
     }
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        
+        // Sets text to categoryName if != nil, else default message
+        cell.textLabel?.text = categories?[indexPath.row].categoryName ?? "Use edit to add category."
         return cell
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -64,31 +47,80 @@ class CategoryTableViewController: UITableViewController {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
-    */
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    //MARK: - data manipulation methods
+    
+    // Save data to Realm persistant store
+    func save(category: Category) {
+        
+        // write data to realm
+        do {
+            try realm.write {
+                realm.add(category)
+            }
+        } catch {
+            print("Error saving to realm \(error)")
+        }
+        
+        // reload the table with new data
+        tableView.reloadData()
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    // Load data from Realm persistant store
+    func load() {
+       
+        // load categories from realm
+        categories = realm.objects(Category.self)
+        
+        // reload tablevite
+        tableView.reloadData()
+        
     }
-    */
+    
+    func deleteCategory() {
+        
+    }
+    
+    // display an alert allowing user to add and delete categories
+    @IBAction func editButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Edit Categories", message: "", preferredStyle: .alert)
+        
+        let addCategory = UIAlertAction(title: "Add", style: .default) { (addCategory) in
+            let newCategory = Category()
+            newCategory.categoryName = textField.text!
+            self.save(category: newCategory)
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Enter a name"
+            textField = alertTextField
+            
+            
+        }
+        
+        alert.addAction(addCategory)
+        
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    //Mark: tableview delegate methods
+    
+    // Segue to ListTableview for selected cell
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goToListVC", sender: self)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        let destinationVC = segue.destination as! ListTableViewController
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destinationVC.selectedCategory = categories?[indexPath.row]
+        }
     }
-    */
+    
 
 }
