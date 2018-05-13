@@ -10,34 +10,35 @@ import UIKit
 import RealmSwift
 
 class CategoryTableViewController: UITableViewController {
+
     let realm = try! Realm()
-    
     var categories : Results<Category>?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        load()
-    }
 
+        loadCategory()
+    }
 
     // MARK: - Table view data source
 
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // returns count if != nil, else returns 1
         return categories?.count ?? 1
     }
 
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        
-        // Sets text to categoryName if != nil, else default message
-        cell.textLabel?.text = categories?[indexPath.row].categoryName ?? "Use edit to add category."
+
+        cell.textLabel?.text = categories?[indexPath.row].categoryName ?? "Please add a category"
+    
         return cell
     }
+ 
 
+
+    /*
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -47,32 +48,25 @@ class CategoryTableViewController: UITableViewController {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
+    */
 
-    //MARK: - data manipulation methods
-    
-    // Save data to Realm persistant store
-    func save(category: Category) {
-        
-        // write data to realm
+    // save item to realm
+    func saveCategory(category: Category) {
         do {
             try realm.write {
                 realm.add(category)
             }
         } catch {
-            print("Error saving to realm \(error)")
+            print("Error saving category, \(error)")
         }
-        
-        // reload the table with new data
         tableView.reloadData()
     }
     
-    // Load data from Realm persistant store
-    func load() {
-       
-        // load categories from realm
+    // Load categories from realm
+    func loadCategory() {
         categories = realm.objects(Category.self)
         
-        // reload tablevite
+        // reload the table
         tableView.reloadData()
         
     }
@@ -80,38 +74,35 @@ class CategoryTableViewController: UITableViewController {
     func deleteCategory() {
         
     }
-    
-    // display an alert allowing user to add and delete categories
-    @IBAction func editButtonPressed(_ sender: UIBarButtonItem) {
+
+
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
         
-        let alert = UIAlertController(title: "Edit Categories", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add Category", message: "", preferredStyle: .alert)
         
-        let addCategory = UIAlertAction(title: "Add", style: .default) { (addCategory) in
+        let action = UIAlertAction(title: "Add", style: .default) { (action) in
+            
             let newCategory = Category()
             newCategory.categoryName = textField.text!
-            self.save(category: newCategory)
+            self.saveCategory(category: newCategory)
+            
         }
         
         alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Enter a name"
+            alertTextField.placeholder = "Add new category name"
             textField = alertTextField
-            
-            
         }
         
-        alert.addAction(addCategory)
+        alert.addAction(action)
         
         present(alert, animated: true, completion: nil)
-        
     }
     
-
-    //Mark: tableview delegate methods
+    // delegate methods
     
-    // Segue to ListTableview for selected cell
-    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goToListVC", sender: self)
     }
     
@@ -122,5 +113,33 @@ class CategoryTableViewController: UITableViewController {
         }
     }
     
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

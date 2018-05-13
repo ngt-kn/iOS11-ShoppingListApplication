@@ -10,54 +10,46 @@ import UIKit
 import RealmSwift
 
 class ListTableViewController: UITableViewController {
-
     let realm = try! Realm()
-    var item: Results<ListItem>?
+    var listItem : Results<ListItem>?
     
     var selectedCategory : Category? {
-        didSet{
+        didSet {
             loadItems()
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadItems()
 
     }
+
+
 
     // MARK: - Table view data source
 
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return listItem?.count ?? 1
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
-        // Configure the cell...
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
+
+        cell.textLabel?.text = listItem?[indexPath.row].itemName ?? "Please add an item"
 
         return cell
     }
-    
-    //MARK: - Data manipulation
-    // load items from ream
+
     func loadItems() {
-        // load items from realm for the current category, sorted by itemName
-        item = selectedCategory?.items.sorted(byKeyPath: "itemName", ascending: true)
+        listItem = selectedCategory?.items.sorted(byKeyPath: "itemName", ascending: true)
         
-        // reload data for tableview
         tableView.reloadData()
-    }
-    
-
-    
-    // Delete items from realm
-    func deleteItems() {
-
+        
     }
 
-    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
-    }
+
+
 }
