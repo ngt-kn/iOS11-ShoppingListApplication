@@ -40,24 +40,30 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="M50-69-oBt" kind="show" identifier="goToListVC" id="vhw-9V-bI3"/>
+                        <segue destination="M50-69-oBt" kind="show" identifier="goToListVC" id="tzo-A6-3uo"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XWe-AZ-Ad3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="908" y="117.39130434782609"/>
         </scene>
-        <!--List Table View Controller-->
+        <!--List-->
         <scene sceneID="8S9-S0-mIU">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K53-nj-JhQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="M50-69-oBt" customClass="ListTableViewController" customModule="MyListApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="jpH-BL-Kdf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="cip-6h-DAI">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListCell" id="3l8-1U-hAR">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3l8-1U-hAR" id="and-XM-dEk">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -70,10 +76,12 @@
                             <outlet property="delegate" destination="M50-69-oBt" id="Eod-un-7aS"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="List" id="iMh-jc-npy">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="qq0-Nl-p7r"/>
+                    </navigationItem>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="K53-nj-JhQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1702" y="116"/>
+            <point key="canvasLocation" x="1671" y="117"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hQf-dv-QRB">
