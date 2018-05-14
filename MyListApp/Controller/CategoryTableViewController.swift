@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class CategoryTableViewController: UITableViewController {
+class CategoryTableViewController: SwipeTableViewController {
 
     let realm = try! Realm()
     var categories : Results<Category>?
@@ -20,6 +20,8 @@ class CategoryTableViewController: UITableViewController {
 
 
         loadCategory()
+        
+        tableView.rowHeight = 80
     }
 
     // MARK: - Table view data source
@@ -29,30 +31,15 @@ class CategoryTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
         cell.textLabel?.text = categories?[indexPath.row].categoryName ?? "Please add a category"
     
         return cell
     }
-    
-    // Delete category
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            if let category = categories?[indexPath.row]{
-                do {
-                    try realm.write{
-                        realm.delete(category)
-                    }
-                    
-                } catch {
-                    print("Error, \(error)")
-                }
-            }
-            tableView.reloadData()
-        }
-    }
  
+    //Data manipulation methods
 
     // save item to realm
     func saveCategory(category: Category) {
@@ -74,9 +61,17 @@ class CategoryTableViewController: UITableViewController {
         tableView.reloadData()
         
     }
-    
-    func deleteCategory() {
-        
+    // Delete from swipe
+    override func updateModel(at indexPath: IndexPath) {
+        if let category = self.categories?[indexPath.row]{
+            do {
+                try self.realm.write{
+                    self.realm.delete(category)
+                }
+            } catch {
+                print("Error, \(error)")
+            }
+        }
     }
 
 
@@ -118,30 +113,6 @@ class CategoryTableViewController: UITableViewController {
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

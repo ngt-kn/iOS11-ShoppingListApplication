@@ -8,4 +8,5 @@ target 'MyListApp' do
   # Pods for MyListApp
 
 pod 'RealmSwift'
+pod 'SwipeCellKit'
 end

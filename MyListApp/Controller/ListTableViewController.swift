@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class ListTableViewController: UITableViewController {
+class ListTableViewController: SwipeTableViewController {
     
     let realm = try! Realm()  // initialize realm
     var listItem : Results<ListItem>?  // declare a new object
@@ -24,6 +24,8 @@ class ListTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.rowHeight = 80
     }
 
 
@@ -37,9 +39,13 @@ class ListTableViewController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
+       
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
         // if itemName != nil add itemName to list. else list is empty
         cell.textLabel?.text = listItem?[indexPath.row].itemName ?? "Please add an item"
+        
         cell.accessoryType = (listItem?[indexPath.row].done)! ? .checkmark : .none
         return cell
     }
@@ -65,23 +71,6 @@ class ListTableViewController: UITableViewController {
         // After selection reset row color to default
         tableView.deselectRow(at: indexPath, animated: true)
         
-    }
-    
-    // Delete item from list
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            if let delItem = listItem?[indexPath.row]{
-                do {
-                    try realm.write{
-                        realm.delete(delItem)
-                    }
-                    
-                } catch {
-                    print("Error, \(error)")
-                }
-            }
-            tableView.reloadData()
-        }
     }
     
     //MARK: Add items
@@ -120,7 +109,6 @@ class ListTableViewController: UITableViewController {
         
     }
     
-    
     //MARK: - data manipulation methods
     
     // Load objects from realm
@@ -130,9 +118,19 @@ class ListTableViewController: UITableViewController {
         tableView.reloadData()
         
     }
+    // Delete item
+    override func updateModel(at indexPath: IndexPath) {
+        if let delItem = listItem?[indexPath.row]{
+            do {
+                try realm.write{
+                    realm.delete(delItem)
+                }
 
-
-
+            } catch {
+                print("Error, \(error)")
+            }
+        }
+    }
 }
 
 //Mark: - Search bar methods
