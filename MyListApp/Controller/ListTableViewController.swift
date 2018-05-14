@@ -115,3 +115,31 @@ class ListTableViewController: UITableViewController {
 
 
 }
+
+//Mark: - Search bar methods
+extension ListTableViewController: UISearchBarDelegate {
+    
+    // searchBar delegate methods
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        listItem = listItem?.filter("itemName CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "itemName", ascending: false)
+        
+        tableView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+    
+}
+
+
+
+
+
