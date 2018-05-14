@@ -14,5 +14,6 @@ class Category: Object {
     
     // class properties
     @objc dynamic var categoryName: String = ""
+    @objc dynamic var color: String = ""
     let items = List<ListItem>() // Set a one to many relationship to ListItem
 }

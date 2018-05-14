@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class ListTableViewController: SwipeTableViewController {
     
@@ -21,11 +22,39 @@ class ListTableViewController: SwipeTableViewController {
         }
         
     }
+   
+    @IBOutlet weak var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.rowHeight = 80
+        tableView.separatorStyle = .none
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let colorHex = selectedCategory?.color {
+            
+            title = selectedCategory!.categoryName
+            
+            guard let navBar = navigationController?.navigationBar else {
+                fatalError("Navigation controller does not exist")
+            }
+            navBar.barTintColor = UIColor(hexString: colorHex)
+            
+            if let navBarColor = UIColor(hexString: colorHex) {
+                
+                navBar.barTintColor = navBarColor
+               
+                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                
+                navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor :
+                    ContrastColorOf(navBarColor, returnFlat: true)]
+                
+                searchBar.barTintColor = navBarColor
+            }
+
+        }
     }
 
 
@@ -43,10 +72,22 @@ class ListTableViewController: SwipeTableViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        // if itemName != nil add itemName to list. else list is empty
-        cell.textLabel?.text = listItem?[indexPath.row].itemName ?? "Please add an item"
+        if let item = listItem?[indexPath.row] {
+            cell.textLabel?.text = item.itemName
+            
+            
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat((listItem!.count)) ){
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
+            cell.accessoryType = (listItem?[indexPath.row].done)! ? .checkmark : .none
+        } else {
+            
+        }
+      
+        //cell.textLabel?.text = listItem?[indexPath.row].itemName ?? "Please add an item"
         
-        cell.accessoryType = (listItem?[indexPath.row].done)! ? .checkmark : .none
+        
         return cell
     }
 
