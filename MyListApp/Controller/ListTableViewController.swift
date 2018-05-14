@@ -19,6 +19,7 @@ class ListTableViewController: UITableViewController {
         didSet {
             loadItems()
         }
+        
     }
     
     override func viewDidLoad() {
@@ -39,12 +40,30 @@ class ListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
         // if itemName != nil add itemName to list. else list is empty
         cell.textLabel?.text = listItem?[indexPath.row].itemName ?? "Please add an item"
-
+        cell.accessoryType = (listItem?[indexPath.row].done)! ? .checkmark : .none
         return cell
     }
 
     //Mark: - delegate methods
+    
+    // Place checkmark on cell
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        
+        if let item = listItem?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.done = !item.done
+                }
+            } catch {
+                print("Error, \(error)")
+            }
+        }
+        
+        tableView.reloadData()
+        
+        // After selection reset row color to default
+        tableView.deselectRow(at: indexPath, animated: true)
         
     }
     
