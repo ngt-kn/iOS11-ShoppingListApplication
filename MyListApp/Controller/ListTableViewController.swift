@@ -48,6 +48,23 @@ class ListTableViewController: UITableViewController {
         
     }
     
+    // Delete item from list
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if let delItem = listItem?[indexPath.row]{
+                do {
+                    try realm.write{
+                        realm.delete(delItem)
+                    }
+                    
+                } catch {
+                    print("Error, \(error)")
+                }
+            }
+            tableView.reloadData()
+        }
+    }
+    
     //MARK: Add items
     @IBAction func addItemButton(_ sender: UIBarButtonItem) {
         var nameTextField = UITextField()

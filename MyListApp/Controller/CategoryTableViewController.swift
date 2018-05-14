@@ -35,20 +35,24 @@ class CategoryTableViewController: UITableViewController {
     
         return cell
     }
- 
-
-
-    /*
-    // Override to support editing the table view.
+    
+    // Delete category
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            if let category = categories?[indexPath.row]{
+                do {
+                    try realm.write{
+                        realm.delete(category)
+                    }
+                    
+                } catch {
+                    print("Error, \(error)")
+                }
+            }
+            tableView.reloadData()
+        }
     }
-    */
+ 
 
     // save item to realm
     func saveCategory(category: Category) {
