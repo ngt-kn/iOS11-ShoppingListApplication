@@ -70,13 +70,13 @@ class ListTableViewController: SwipeTableViewController {
 
 
     // MARK: - Table view data source
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // if count != nil, return count. Else return 1.
         return listItem?.count ?? 1
     }
 
 
+    //TODO: - Add functionality to display price and qty
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        
         
@@ -84,7 +84,6 @@ class ListTableViewController: SwipeTableViewController {
         
         if let item = listItem?[indexPath.row] {
             cell.textLabel?.text = item.itemName
-            
             
             if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat((listItem!.count)) ){
                 cell.backgroundColor = color
